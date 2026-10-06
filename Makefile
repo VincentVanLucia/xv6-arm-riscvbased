@@ -188,7 +188,7 @@ QEMUOPTS += -global virtio-mmio.force-legacy=false
 qemu: check-qemu-version $K/kernel
 	$(QEMU) $(QEMUOPTS)
 
-.gdbinit: .gdbinit.tmpl-riscv
+.gdbinit: .gdbinit.tmpl-aarch64
 	sed "s/:1234/:$(GDBPORT)/" < $^ > $@
 
 qemu-gdb: $K/kernel .gdbinit 
