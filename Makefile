@@ -30,8 +30,7 @@ OBJS = \
   $K/plic.o \
   $K/virtio_disk.o
 
-# riscv64-unknown-elf- or riscv64-linux-gnu-
-# perhaps in /opt/riscv/bin
+#changed to aarch64-linux-gnu-
 TOOLPREFIX = aarch64-linux-gnu-
 
 # Try to infer the correct TOOLPREFIX if not set
@@ -52,7 +51,8 @@ TOOLPREFIX := $(shell if riscv64-unknown-elf-objdump -i 2>&1 | grep 'elf64-big' 
 	echo "***" 1>&2; exit 1; fi)
 endif
 
-QEMU = qemu-system-riscv64
+#changed qemu-system-riscv64 to qemu-system-aarch64
+QEMU = qemu-system-aarch64
 MIN_QEMU_VERSION = 7.2
 
 CC = $(TOOLPREFIX)gcc
@@ -174,12 +174,15 @@ ifndef CPUS
 CPUS := 3
 endif
 
-QEMUOPTS = -machine virt -bios none -kernel $K/kernel -m 128M -smp $(CPUS) -nographic
+ #changed  -m virt line also commented out the -drive and -device
+QEMUOPTS = -M virt,gic-version=2 -cpu cortex-a76 $K/kernel -m 128M -smp $(CPUS) -nographic
 QEMUOPTS += -global virtio-mmio.force-legacy=false
-QEMUOPTS += -drive file=fs.img,if=none,format=raw,id=x0
-QEMUOPTS += -device virtio-blk-device,drive=x0,bus=virtio-mmio-bus.0
+# QEMUOPTS += -drive file=fs.img,if=none,format=raw,id=x0
+# QEMUOPTS += -device virtio-blk-device,drive=x0,bus=virtio-mmio-bus.0
 
-qemu: check-qemu-version $K/kernel fs.img
+
+#removed fs.img from the qemu command
+qemu: check-qemu-version $K/kernel
 	$(QEMU) $(QEMUOPTS)
 
 .gdbinit: .gdbinit.tmpl-riscv
