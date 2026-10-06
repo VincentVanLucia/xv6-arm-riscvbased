@@ -1,8 +1,8 @@
 K=kernel
 U=user
 
-OBJS = \
-  $K/entry.o \
+OBJS = $K/arch/aarch64/entry.o \
+#  $K/entry.o \
   $K/start.o \
   $K/console.o \
   $K/printk.o \
@@ -65,7 +65,7 @@ DETFLAGS = -ffile-prefix-map=$(CURDIR)=.
 
 CFLAGS = -Wall -Werror -Wno-unknown-attributes -O -fno-omit-frame-pointer -ggdb -gdwarf-2
 CFLAGS += $(DETFLAGS)
-CFLAGS += -march=rv64gc
+CFLAGS += -mcpu=cortex-a76
 CFLAGS += -std=gnu99
 CFLAGS += -MD
 CFLAGS += -mcmodel=medany
@@ -90,13 +90,16 @@ endif
 
 LDFLAGS = -z max-page-size=4096
 
-$K/kernel: $(OBJS) $K/kernel.ld
-	$(LD) $(LDFLAGS) -T $K/kernel.ld -o $K/kernel $(OBJS) 
+#changed kernel.ld to my actual path
+#i did this change to later support my pi 5
+
+$K/kernel: $(OBJS) $K/board/virt/kernel.ld
+	$(LD) $(LDFLAGS) -T $K/board/virt/kernel.ld -o $K/kernel $(OBJS) 
 	$(OBJDUMP) -S $K/kernel > $K/kernel.asm
 	$(OBJDUMP) -t $K/kernel | sed '1,/SYMBOL TABLE/d; s/ .* / /; /^$$/d' > $K/kernel.sym
 
 $K/%.o: $K/%.S
-	$(CC) -march=rv64gc -g $(DETFLAGS) -c -o $@ $<
+	$(CC) -mcpu=cortex-a76 -g $(DETFLAGS) -c -o $@ $<
 
 tags: $(OBJS)
 	etags kernel/*.S kernel/*.c
