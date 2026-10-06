@@ -68,7 +68,7 @@ CFLAGS += $(DETFLAGS)
 CFLAGS += -mcpu=cortex-a76
 CFLAGS += -std=gnu99
 CFLAGS += -MD
-CFLAGS += -mcmodel=medany
+#CFLAGS += -mcmodel=medany
 CFLAGS += -ffreestanding
 CFLAGS += -fno-common -nostdlib
 CFLAGS += -fno-builtin-strncpy -fno-builtin-strncmp -fno-builtin-strlen -fno-builtin-memset
