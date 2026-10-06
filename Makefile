@@ -177,7 +177,7 @@ ifndef CPUS
 CPUS := 3
 endif
 
- #changed  -m virt line also commented out the -drive and -device
+ #changed  -m virt line also commented out the -drive and -device.
 QEMUOPTS = -M virt,gic-version=2 -cpu cortex-a76 -kernel $K/kernel -m 128M -smp $(CPUS) -nographic
 QEMUOPTS += -global virtio-mmio.force-legacy=false
 # QEMUOPTS += -drive file=fs.img,if=none,format=raw,id=x0
